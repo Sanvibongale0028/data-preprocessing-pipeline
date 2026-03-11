@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FILE_PATH', defaultValue: '', description: 'Dataset path')
+    }
+
+    stages {
+
+        stage('Pipeline Triggered') {
+            steps {
+                echo "Pipeline started successfully"
+            }
+        }
+
+        stage('Dataset Info') {
+            steps {
+                echo "Dataset received: ${params.FILE_PATH}"
+            }
+        }
+
+    }
+}

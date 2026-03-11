@@ -1,13 +1,10 @@
 const axios = require("axios");
 
-const JENKINS_URL =
-  "http://localhost:8080/job/data_preprocessing_pipeline/buildWithParameters";
-
-const USERNAME = "your-jenkins-username";
-const API_TOKEN = "your-api-token";
+const JENKINS_URL = process.env.JENKINS_URL;
+const USERNAME = process.env.JENKINS_USERNAME;
+const API_TOKEN = process.env.JENKINS_API_TOKEN;
 
 async function triggerJenkinsJob(filePath) {
-
   try {
 
     await axios.post(
@@ -26,14 +23,11 @@ async function triggerJenkinsJob(filePath) {
       }
     );
 
-    console.log("Jenkins pipeline triggered successfully");
+    console.log("Jenkins pipeline triggered");
 
   } catch (error) {
-
-    console.error("Failed to trigger Jenkins job:", error.message);
-
+    console.error("Failed to trigger Jenkins:", error.message);
   }
-
 }
 
 module.exports = { triggerJenkinsJob };

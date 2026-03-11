@@ -1,0 +1,24 @@
+# Environment variables
+.env
+
+# Node dependencies
+node_modules/
+
+# Uploaded datasets
+backend/uploads/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build folders
+dist/
+build/
+
+# Python cache (future preprocessing scripts)
+__pycache__/
+*.pyc

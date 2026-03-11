@@ -1,16 +1,68 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the frontend application built using React.
+It provides a user interface that allows users to upload datasets for preprocessing.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Dataset upload interface
+* File validation for supported formats
+* API communication with the backend server
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React
+Axios (for API requests)
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+frontend
+│
+├── src
+│   ├── components
+│   │   └── FileUpload.js
+│   │
+│   ├── App.js
+│   └── index.js
+│
+├── package.json
+└── README.md
+```
+
+## Installation
+
+Install dependencies:
+
+```
+npm install
+```
+
+## Run the Application
+
+Start the development server:
+
+```
+npm start
+```
+
+The frontend will start at:
+
+```
+http://localhost:3000
+```
+
+## Supported File Types
+
+Users can upload the following dataset formats:
+
+* .csv
+* .xlsx
+* .json
+* .parquet
+
+## Workflow
+
+1. User selects a dataset file.
+2. File is validated in the frontend.
+3. File is sent to the backend API using a POST request.

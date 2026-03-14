@@ -54,12 +54,10 @@ async function triggerJenkinsJob(filePath) {
 
   try {
 
-    const fullPath = `backend/${filePath}`;
-
     await axios.post(
       JENKINS_URL,
       new URLSearchParams({
-        FILE_PATH: fullPath
+        FILE_PATH: filePath
       }),
       {
         auth: {
@@ -72,13 +70,18 @@ async function triggerJenkinsJob(filePath) {
       }
     );
 
-    console.log("Jenkins pipeline triggered");
+    console.log("Jenkins pipeline triggered successfully");
+
+    return true;
 
   } catch (error) {
 
     console.error("Failed to trigger Jenkins:", error.message);
 
+    return false;
+
   }
+
 }
 
 module.exports = { triggerJenkinsJob };

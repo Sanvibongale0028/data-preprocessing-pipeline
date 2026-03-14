@@ -6,6 +6,7 @@ node_modules/
 
 # Uploaded datasets
 backend/uploads/
+backend/processed
 
 # Logs
 logs/

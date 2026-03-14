@@ -2,22 +2,39 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'FILE_PATH', defaultValue: '', description: 'Dataset path')
+        string(name: 'FILE_PATH', defaultValue: '', description: 'Dataset file path')
     }
 
     stages {
 
-        stage('Pipeline Triggered') {
+        stage('Start Pipeline') {
             steps {
                 echo "Pipeline started successfully"
-            }
-        }
-
-        stage('Dataset Info') {
-            steps {
                 echo "Dataset received: ${params.FILE_PATH}"
             }
         }
 
+        stage('Install Python Dependencies') {
+            steps {
+                sh '''
+                python3 -m pip install --upgrade pip
+                pip3 install -r preprocessing/requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Preprocessing Pipeline') {
+            steps {
+                sh """
+                python3 preprocessing/main_pipeline.py ${params.FILE_PATH}
+                """
+            }
+        }
+
+        stage('Pipeline Completed') {
+            steps {
+                echo "Preprocessing completed successfully"
+            }
+        }
     }
 }

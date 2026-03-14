@@ -6,7 +6,8 @@ node_modules/
 
 # Uploaded datasets
 backend/uploads/
-backend/processed
+backend/processed/
+venv/
 
 # Logs
 logs/

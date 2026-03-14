@@ -14,26 +14,40 @@ pipeline {
             }
         }
 
-        stage('Install Python Dependencies') {
+        stage('Setup Python Virtual Environment') {
             steps {
                 sh '''
-                python3 -m pip install --upgrade pip
-                pip3 install -r preprocessing/requirements.txt
+                echo "Creating Python virtual environment"
+
+                python3 -m venv venv
+
+                echo "Activating virtual environment"
+                . venv/bin/activate
+
+                echo "Upgrading pip"
+                pip install --upgrade pip
+
+                echo "Installing project dependencies"
+                pip install -r preprocessing/requirements.txt
                 '''
             }
         }
 
         stage('Run Preprocessing Pipeline') {
             steps {
-                sh """
-                python3 preprocessing/main_pipeline.py ${params.FILE_PATH}
-                """
+                sh '''
+                echo "Running preprocessing pipeline"
+
+                . venv/bin/activate
+
+                python preprocessing/main_pipeline.py ${FILE_PATH}
+                '''
             }
         }
 
         stage('Pipeline Completed') {
             steps {
-                echo "Preprocessing completed successfully"
+                echo "Preprocessing pipeline executed successfully"
             }
         }
     }

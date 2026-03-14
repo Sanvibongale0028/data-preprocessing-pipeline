@@ -14,12 +14,37 @@ pipeline {
             }
         }
 
-        stage('Setup Python Virtual Environment') {
+        stage('Prepare Dataset Folder') {
             steps {
                 sh '''
-                echo "Creating Python virtual environment"
+                echo "Creating datasets directory in Jenkins workspace"
+                mkdir -p datasets
+                '''
+            }
+        }
 
-                python3 -m venv venv
+        stage('Copy Dataset to Workspace') {
+            steps {
+                sh '''
+                echo "Copying uploaded dataset into Jenkins workspace"
+
+                cp ${FILE_PATH} datasets/input.csv
+
+                echo "Checking datasets folder:"
+                ls -l datasets
+                '''
+            }
+        }
+
+        stage('Setup Python Environment') {
+            steps {
+                sh '''
+                echo "Setting up Python environment"
+
+                if [ ! -d "venv" ]; then
+                    echo "Creating virtual environment"
+                    python3 -m venv venv
+                fi
 
                 echo "Activating virtual environment"
                 . venv/bin/activate
@@ -40,7 +65,27 @@ pipeline {
 
                 . venv/bin/activate
 
-                python preprocessing/main_pipeline.py ${FILE_PATH}
+                echo "Workspace location:"
+                pwd
+
+                echo "Files available before preprocessing:"
+                ls -l datasets
+
+                python preprocessing/main_pipeline.py datasets/input.csv
+                '''
+            }
+        }
+
+        stage('Save Processed File') {
+            steps {
+                sh '''
+                echo "Moving processed dataset back to backend"
+
+                mkdir -p /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed
+
+                cp datasets/processed_output.csv /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed/
+
+                echo "Processed file successfully copied"
                 '''
             }
         }
@@ -49,6 +94,18 @@ pipeline {
             steps {
                 echo "Preprocessing pipeline executed successfully"
             }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+            echo "Cleaning datasets folder to prevent storage buildup"
+
+            rm -rf datasets/*
+
+            echo "Cleanup completed"
+            '''
         }
     }
 }

@@ -57,7 +57,7 @@ async function triggerJenkinsJob(filePath) {
     await axios.post(
       JENKINS_URL,
       new URLSearchParams({
-        FILE_PATH: filePath
+        FILE_NAME: filePath
       }),
       {
         auth: {

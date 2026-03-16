@@ -2,15 +2,20 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'FILE_PATH', defaultValue: '', description: 'Dataset file path')
+        string(name: 'FILE_NAME', defaultValue: '', description: 'Dataset file name')
     }
 
     stages {
 
         stage('Start Pipeline') {
             steps {
+                script {
+                    if (!params.FILE_NAME) {
+                        error "FILE_NAME parameter is required"
+                    }
+                }
                 echo "Pipeline started successfully"
-                echo "Dataset received: ${params.FILE_PATH}"
+                echo "Dataset received: ${params.FILE_NAME}"
             }
         }
 
@@ -26,9 +31,16 @@ pipeline {
         stage('Copy Dataset to Workspace') {
             steps {
                 sh '''
+                echo "Checking if uploaded file exists"
+
+                if [ ! -f "/home/sanvi/Main/TY_Mini_Project/Final_MP/backend/uploads/${FILE_NAME}" ]; then
+                    echo "Dataset not found!"
+                    exit 1
+                fi
+
                 echo "Copying uploaded dataset into Jenkins workspace"
 
-                cp ${FILE_PATH} datasets/input.csv
+                cp /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/uploads/${FILE_NAME} datasets/
 
                 echo "Checking datasets folder:"
                 ls -l datasets
@@ -71,7 +83,7 @@ pipeline {
                 echo "Files available before preprocessing:"
                 ls -l datasets
 
-                python preprocessing/main_pipeline.py datasets/input.csv
+                python preprocessing/main_pipeline.py datasets/${FILE_NAME}
                 '''
             }
         }
@@ -80,10 +92,17 @@ pipeline {
             steps {
                 sh '''
                 echo "Moving processed dataset back to backend"
-
                 mkdir -p /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed
 
-                cp datasets/processed_output.csv /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed/
+                echo "Deleting old processed file"
+                rm -f /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed/*
+
+                echo "Extracting file extension"
+                EXT="${FILE_NAME##*.}"
+
+                echo "Saving processed file with same extension"
+
+                cp datasets/processed_output.${EXT} /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/processed/processed_output.${EXT}
 
                 echo "Processed file successfully copied"
                 '''
@@ -101,8 +120,10 @@ pipeline {
         always {
             sh '''
             echo "Cleaning datasets folder to prevent storage buildup"
-
             rm -rf datasets/*
+
+            echo "Deleting uploaded file from backend/uploads"
+            rm -f /home/sanvi/Main/TY_Mini_Project/Final_MP/backend/uploads/${FILE_NAME}
 
             echo "Cleanup completed"
             '''

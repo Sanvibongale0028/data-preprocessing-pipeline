@@ -50,22 +50,20 @@ const JENKINS_URL = process.env.JENKINS_URL;
 const USERNAME = process.env.JENKINS_USERNAME;
 const API_TOKEN = process.env.JENKINS_API_TOKEN;
 
-async function triggerJenkinsJob(filePath) {
+async function triggerJenkinsJob(fileName) {
 
   try {
 
     await axios.post(
       JENKINS_URL,
-      new URLSearchParams({
-        FILE_NAME: filePath
-      }),
+      null,
       {
+        params: {
+          FILE_NAME: fileName
+        },
         auth: {
           username: USERNAME,
           password: API_TOKEN
-        },
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
         }
       }
     );

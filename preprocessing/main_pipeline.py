@@ -51,10 +51,12 @@ from data_loader.load_dataset import load_dataset
 from dataset_identifier.detect_dataset_type import detect_dataset_type
 from cleaning.handle_missing import handle_missing_values
 from cleaning.remove_duplicates import remove_duplicates
+from feature_engineering.handle_datetime import handle_datetime
+from outlier_handling.handle_outlier_values import handle_outliers
 from transformation.encoding import encode_categorical
 from transformation.scaling import scale_features
 from transformation.normalization import normalize_features
-from feature_engineering.feature_extraction import extract_features
+from preprocessing.feature_engineering.handle_datetime import extract_features
 
 
 def main(file_path):
@@ -71,14 +73,18 @@ def main(file_path):
     # Cleaning
     df = remove_duplicates(df)
     df = handle_missing_values(df)
+    df = handle_datetime(df)
+    
+    # Outlier Handling
+    df = handle_outliers(df)
 
     # Transformation
     df = encode_categorical(df)
     df = scale_features(df)
-    df = normalize_features(df)
+    # df = normalize_features(df)
 
     # Feature Engineering
-    df = extract_features(df)
+    # df = extract_features(df)
 
     # Create processed folder if it doesn't exist
     processed_dir = "backend/processed"

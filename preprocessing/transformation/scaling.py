@@ -1,15 +1,39 @@
-from sklearn.preprocessing import StandardScaler
-import pandas as pd
+# from sklearn.preprocessing import StandardScaler
+# import numpy as np
 
+# def scale_features(df):
+    
+#     df = df.copy()
+    
+#     scaler = StandardScaler()
+    
+#     num_cols = df.select_dtypes(include=np.number).columns
+    
+#     # select only non-binary columns
+#     scale_cols = [col for col in num_cols if df[col].nunique() > 2]
+    
+#     df[scale_cols] = scaler.fit_transform(df[scale_cols])
+    
+#     return df
+
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
 def scale_features(df):
-
-    numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-
+    
+    df = df.copy()
+    
     scaler = StandardScaler()
-
-    df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
-
-    print("Feature scaling applied")
-
+    
+    num_cols = df.select_dtypes(include=np.number).columns
+    
+    # Select only continuous columns
+    scale_cols = [
+        col for col in num_cols
+        if df[col].nunique() > 10   # skip binary + low-cardinality (month, weekday, etc.)
+        and df[col].std() != 0      # skip constant columns
+    ]
+    
+    df[scale_cols] = scaler.fit_transform(df[scale_cols])
+    
     return df

@@ -55,8 +55,7 @@ from feature_engineering.handle_datetime import handle_datetime
 from outlier_handling.handle_outlier_values import handle_outliers
 from transformation.encoding import encode_categorical
 from transformation.scaling import scale_features
-from transformation.normalization import normalize_features
-from preprocessing.feature_engineering.handle_datetime import extract_features
+
 
 
 def main(file_path):

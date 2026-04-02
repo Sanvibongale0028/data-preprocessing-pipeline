@@ -51,7 +51,7 @@ from data_loader.load_dataset import load_dataset
 from dataset_identifier.detect_dataset_type import detect_dataset_type
 from cleaning.handle_missing import handle_missing_values
 from cleaning.remove_duplicates import remove_duplicates
-from feature_engineering.handle_datetime import handle_datetime
+# from feature_engineering.handle_datetime import handle_datetime
 from outlier_handling.handle_outlier_values import handle_outliers
 from transformation.encoding import encode_categorical
 from transformation.scaling import scale_features
@@ -72,7 +72,7 @@ def main(file_path):
     # Cleaning
     df = remove_duplicates(df)
     df = handle_missing_values(df)
-    df = handle_datetime(df)
+    # df = handle_datetime(df)
     
     # Outlier Handling
     df = handle_outliers(df)
